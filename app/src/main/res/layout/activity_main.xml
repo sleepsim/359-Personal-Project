@@ -25,7 +25,8 @@
             android:id="@+id/categoriesTab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="scrollable"/>
+            android:contentDescription="different tab categories"
+            app:tabMode="scrollable" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager

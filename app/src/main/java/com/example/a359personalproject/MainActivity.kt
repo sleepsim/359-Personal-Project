@@ -17,7 +17,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val mainTabLayout = findViewById<TabLayout>(R.id.categoriesTab)
+        mainTabLayout.contentDescription = "Different Categories for Lists"
 
-        mainTabLayout.addTab(mainTabLayout.newTab())
+        val tab1:TabLayout.Tab = mainTabLayout.newTab()
+        tab1.text = "test lol"
+
+        mainTabLayout.addTab(tab1)
     }
 }
