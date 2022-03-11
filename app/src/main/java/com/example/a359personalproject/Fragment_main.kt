@@ -22,7 +22,8 @@ class Fragment_main : Fragment() {
         false)
 
         //Grab current category from main activity
-        val currCat: ListCategory = MainActivity().getCat()
+
+        val currCat: ListCategory = (activity as MainActivity).getCat()
         currCat.getItems()
 
         val checkBox = fragmentView.findViewById<CheckBox>(R.id.checkBoxTester)
@@ -32,7 +33,7 @@ class Fragment_main : Fragment() {
         }
 
         if(currCat.getCategoryName() == "Trash") checkBox.text = "TRASH TRASH TRASH"
-        Log.i("FragmentRefresh", "I REFRESHED")
+        Log.i("FragmentRefresh", currCat.getCategoryName())
 
         return fragmentView
     }

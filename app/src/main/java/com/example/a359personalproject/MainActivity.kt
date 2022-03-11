@@ -1,5 +1,6 @@
 package com.example.a359personalproject
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,6 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
+    val context: Context =this@MainActivity
     private var categories:ArrayList<ListCategory> = ArrayList<ListCategory>()
     private var categoryNames:ArrayList<String> = ArrayList<String>()
     private var currentCategory: ListCategory = ListCategory("Filler")
