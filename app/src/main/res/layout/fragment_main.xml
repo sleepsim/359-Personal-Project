@@ -3,13 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EC7A7A"
+    android:background="#EFDEDE"
     tools:context=".Fragment_main">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="hello blank fragment" />
+        android:orientation="vertical">
+
+        <CheckBox
+            android:id="@+id/checkBoxTester"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="not yet" />
+
+    </LinearLayout>
 
 </FrameLayout>

@@ -5,8 +5,10 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.CheckBox
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         categories.add(ListCategory("Main"))
-        categories.add(ListCategory("new"))
+        categories.add(ListCategory("Trash"))
 
         if(savedInstanceState == null) {
             //initialize
@@ -33,8 +35,8 @@ class MainActivity : AppCompatActivity() {
                 ).commit()
         }
 
-        val addNewButton = findViewById<FloatingActionButton>(R.id.addButton)
-        addNewButton.setOnClickListener {
+        val addNewCatButton = findViewById<FloatingActionButton>(R.id.addCategoryButton)
+        addNewCatButton.setOnClickListener {
             categories.add(ListCategory("newly added"))
             clearAdapter()
             initializeApp()
@@ -43,6 +45,20 @@ class MainActivity : AppCompatActivity() {
             }
             Log.i("endOfArr", "END")
         }
+
+        val spinner = findViewById<Spinner>(R.id.spinner)
+        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                val text1 = spinner.selectedItem.toString()
+                Log.i("SPINNER", text1)
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
+        }
+
     }
 
     //Resets the categories
@@ -72,6 +88,10 @@ class MainActivity : AppCompatActivity() {
         spinner.adapter = arrayAdapter
         arrayAdapter.clear()
         arrayAdapter.notifyDataSetChanged()
+    }
+
+    public fun getCat(): ArrayList<ListCategory>{
+        return categories
     }
 
     private fun saveApp(){
