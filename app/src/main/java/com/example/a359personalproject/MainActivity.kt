@@ -3,18 +3,17 @@ package com.example.a359personalproject
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.CheckBox
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
     private var categories:ArrayList<ListCategory> = ArrayList<ListCategory>()
     private var categoryNames:ArrayList<String> = ArrayList<String>()
+    private var currentCategory: ListCategory = ListCategory("Filler")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         categories.add(ListCategory("Main"))
         categories.add(ListCategory("Trash"))
+        currentCategory = categories.get(0)
 
         if(savedInstanceState == null) {
             //initialize
@@ -31,10 +31,11 @@ class MainActivity : AppCompatActivity() {
                 .beginTransaction()
                 .add(R.id.fragmentContainer,
                     Fragment_main.newInstance(),
-                    "MyTag"
+                    "FragmentMain"
                 ).commit()
         }
 
+        //Button to add new categories
         val addNewCatButton = findViewById<FloatingActionButton>(R.id.addCategoryButton)
         addNewCatButton.setOnClickListener {
             categories.add(ListCategory("newly added"))
@@ -46,17 +47,23 @@ class MainActivity : AppCompatActivity() {
             Log.i("endOfArr", "END")
         }
 
+        //Changes the data depending on selected spinner item
         val spinner = findViewById<Spinner>(R.id.spinner)
         spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                val text1 = spinner.selectedItem.toString()
-                Log.i("SPINNER", text1)
-            }
 
+                val currentCategoryText = spinner.selectedItem.toString()
+                for(i in categories) {
+                    if (i.getCategoryName() == currentCategoryText) {
+                        setCurrentCategory(i)
+                    }
+                }
+                Toast.makeText(applicationContext, "Category Changed", Toast.LENGTH_SHORT).show()
+                redraw()
+            }
             override fun onNothingSelected(p0: AdapterView<*>?) {
 
             }
-
         }
 
     }
@@ -90,12 +97,28 @@ class MainActivity : AppCompatActivity() {
         arrayAdapter.notifyDataSetChanged()
     }
 
-    public fun getCat(): ArrayList<ListCategory>{
-        return categories
+    public fun getCat(): ListCategory {
+        return currentCategory
+    }
+
+    public fun setCurrentCategory(listItem: ListCategory){
+        currentCategory = listItem
     }
 
     private fun saveApp(){
 
+    }
+
+    public fun redraw(){
+        val frag = supportFragmentManager.findFragmentByTag("FragmentMain")
+        supportFragmentManager
+            .beginTransaction()
+            .detach(supportFragmentManager.findFragmentByTag("FragmentMain")!!)
+            .commit()
+        supportFragmentManager
+            .beginTransaction()
+            .attach(supportFragmentManager.findFragmentByTag("FragmentMain")!!)
+            .commit()
     }
 
     fun addNew(){

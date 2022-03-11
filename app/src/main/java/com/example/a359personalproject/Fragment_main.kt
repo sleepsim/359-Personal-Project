@@ -1,6 +1,7 @@
 package com.example.a359personalproject
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,10 +17,13 @@ class Fragment_main : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-
         val fragmentView = inflater.inflate(R.layout.fragment_main,
         container,
         false)
+
+        //Grab current category from main activity
+        val currCat: ListCategory = MainActivity().getCat()
+        currCat.getItems()
 
         val checkBox = fragmentView.findViewById<CheckBox>(R.id.checkBoxTester)
 
@@ -27,7 +31,8 @@ class Fragment_main : Fragment() {
             checkBox.text = "LOOOOL"
         }
 
-        val getCats: ArrayList<ListCategory> = MainActivity().getCat()
+        if(currCat.getCategoryName() == "Trash") checkBox.text = "TRASH TRASH TRASH"
+        Log.i("FragmentRefresh", "I REFRESHED")
 
         return fragmentView
     }
@@ -36,7 +41,6 @@ class Fragment_main : Fragment() {
         fun newInstance() : Fragment_main {
             return Fragment_main()
         }
-
     }
 
 }

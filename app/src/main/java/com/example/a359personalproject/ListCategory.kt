@@ -20,4 +20,8 @@ class ListCategory (categoryName: String){
         return name
     }
 
+    public fun getItems(): ArrayList<String>{
+        return items
+    }
+
 }
