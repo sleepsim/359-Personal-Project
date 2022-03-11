@@ -1,6 +1,7 @@
 package com.example.a359personalproject
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -19,6 +20,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+//        //persistent data
+//        val sharedPreferences:SharedPreferences = this.getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
 
         //Runs if no saved data
         if(savedInstanceState == null) {
@@ -81,6 +85,8 @@ class MainActivity : AppCompatActivity() {
             currentCategory.addItem("Added by button")
             redraw()
         }
+
+
 
     }
 
@@ -158,5 +164,47 @@ class MainActivity : AppCompatActivity() {
     //Add new items
     fun addNew(){
 
+    }
+
+    //Persistent data
+    private fun saveItemData(){
+
+        val sharedPreferences:SharedPreferences = this.getSharedPreferences("itemsList", Context.MODE_PRIVATE)
+        val editor:SharedPreferences.Editor = sharedPreferences.edit()
+        for(i in categories){
+            var set = HashSet<String>()
+            set = i.getItems().toHashSet()
+            editor.putStringSet(i.getCategoryName(), set)
+        }
+    }
+
+    private fun saveCategories(){
+        val sharedPreferences:SharedPreferences = this.getSharedPreferences("categoriesList", Context.MODE_PRIVATE)
+        val editor:SharedPreferences.Editor = sharedPreferences.edit()
+        var set = HashSet<String>()
+        set = categoryNames.toHashSet()
+        editor.putStringSet("Categories", set)
+    }
+
+    private fun loadCategoryData(){
+        //Load category names and add them into an array
+        val sharedPreferences:SharedPreferences = this.getSharedPreferences("categoriesList", Context.MODE_PRIVATE)
+        val savedString = sharedPreferences.getStringSet("Categories", null)
+        categoryNames = ArrayList(savedString)
+        for(i in categoryNames){
+            categories.add(ListCategory(i))
+        }
+    }
+
+    private fun loadCategoryItemsData(){
+        //Load the items of each category into an array and insert into correct category
+        val sharedPreferences:SharedPreferences = this.getSharedPreferences("itemsList", Context.MODE_PRIVATE)
+        for(i in categoryNames){
+            val savedItems = sharedPreferences.getStringSet(i, null)
+            for(j in categories) if(j.getCategoryName() == i) {
+                j.replaceItems(ArrayList(savedItems))
+                break
+            }
+        }
     }
 }

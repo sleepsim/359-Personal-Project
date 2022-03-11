@@ -28,4 +28,8 @@ class ListCategory (categoryName: String){
         items.removeAt(i)
     }
 
+    public fun replaceItems(a: ArrayList<String>){
+        items = a
+    }
+
 }
