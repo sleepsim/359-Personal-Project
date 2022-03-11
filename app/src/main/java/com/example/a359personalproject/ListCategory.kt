@@ -24,4 +24,8 @@ class ListCategory (categoryName: String){
         return items
     }
 
+    public fun removalTest(i: Int){
+        items.removeAt(i)
+    }
+
 }

@@ -12,7 +12,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-    val context: Context =this@MainActivity
     private var categories:ArrayList<ListCategory> = ArrayList<ListCategory>()
     private var categoryNames:ArrayList<String> = ArrayList<String>()
     private var currentCategory: ListCategory = ListCategory("Filler")
@@ -21,11 +20,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        categories.add(ListCategory("Main"))
-        categories.add(ListCategory("Trash"))
-        currentCategory = categories.get(0)
-
+        //Runs if no saved data
         if(savedInstanceState == null) {
+            //2 Main important categories
+            categories.add(ListCategory("Main"))
+            categories.add(ListCategory("Trash"))
+            categories.get(0).addItem("LOL ADDED BY MAIN ACTIVITY")
+
+            currentCategory = categories.get(0)
             //initialize
             initializeApp()
             //Initial fragment loaded first open
@@ -121,6 +123,20 @@ class MainActivity : AppCompatActivity() {
             .beginTransaction()
             .attach(supportFragmentManager.findFragmentByTag("FragmentMain")!!)
             .commit()
+    }
+
+    public fun removeItem(s : String){
+        //Remove the item
+        currentCategory.removeItem(s)
+
+        //Clone to original copy
+        for (i in categories.indices){
+            if(categories.get(i).getCategoryName() == currentCategory.getCategoryName()) {
+                categories[i] = currentCategory
+                break
+            }
+        }
+        redraw()
     }
 
     fun addNew(){
