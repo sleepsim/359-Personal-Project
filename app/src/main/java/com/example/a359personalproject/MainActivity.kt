@@ -26,6 +26,11 @@ class MainActivity : AppCompatActivity() {
             categories.add(ListCategory("Main"))
             categories.add(ListCategory("Trash"))
             categories.get(0).addItem("LOL ADDED BY MAIN ACTIVITY")
+            categories.get(0).addItem("LOL ADDED BY  2")
+            categories.get(0).addItem("LOL ADDED BY  3")
+            categories.get(0).addItem("LOL ADDED BY  4")
+            categories.get(0).addItem("LOL ADDED BY  5")
+
 
             currentCategory = categories.get(0)
             //initialize
@@ -70,6 +75,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        //Button to add new items on list
+        val addNewItemButton = findViewById<FloatingActionButton>(R.id.addItemButton)
+        addNewItemButton.setOnClickListener {
+            currentCategory.addItem("Added by button")
+            redraw()
+        }
+
     }
 
     //Resets the categories
@@ -101,6 +113,7 @@ class MainActivity : AppCompatActivity() {
         arrayAdapter.notifyDataSetChanged()
     }
 
+    //Gets the current category to pass on to fragment
     public fun getCat(): ListCategory {
         return currentCategory
     }
@@ -109,10 +122,12 @@ class MainActivity : AppCompatActivity() {
         currentCategory = listItem
     }
 
+    //
     private fun saveApp(){
 
     }
 
+    //Refreshes the fragment
     public fun redraw(){
         val frag = supportFragmentManager.findFragmentByTag("FragmentMain")
         supportFragmentManager
@@ -125,6 +140,7 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    //Removes an item from list
     public fun removeItem(s : String){
         //Remove the item
         currentCategory.removeItem(s)
@@ -139,6 +155,7 @@ class MainActivity : AppCompatActivity() {
         redraw()
     }
 
+    //Add new items
     fun addNew(){
 
     }
