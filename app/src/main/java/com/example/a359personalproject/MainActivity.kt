@@ -1,11 +1,14 @@
 package com.example.a359personalproject
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -16,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private var categories:ArrayList<ListCategory> = ArrayList<ListCategory>()
     private var categoryNames:ArrayList<String> = ArrayList<String>()
     private var currentCategory: ListCategory = ListCategory("Filler")
+    private var in_Text: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +55,15 @@ class MainActivity : AppCompatActivity() {
         //Button to add new categories
         val addNewCatButton = findViewById<FloatingActionButton>(R.id.addCategoryButton)
         addNewCatButton.setOnClickListener {
-            categories.add(ListCategory("newly added"))
-            clearAdapter()
-            initializeApp()
-            for (f in categoryNames){
-                Log.i("CATNAMES", f.toString())
-            }
-            Log.i("endOfArr", "END")
+            showInputBoxCat()
+//            categories.add(ListCategory("newly added"))
+//            clearAdapter()
+//            initializeApp()
+//            for (f in categoryNames){
+//                Log.i("CATNAMES", f.toString())
+//            }
+//            Log.i("endOfArr", "END")
+//            Log.i("CATNAME2", "In text is" + in_Text)
         }
 
         //Changes the data depending on selected spinner item
@@ -71,7 +77,6 @@ class MainActivity : AppCompatActivity() {
                         setCurrentCategory(i)
                     }
                 }
-                Toast.makeText(applicationContext, "Category Changed", Toast.LENGTH_SHORT).show()
                 redraw()
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -82,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         //Button to add new items on list
         val addNewItemButton = findViewById<FloatingActionButton>(R.id.addItemButton)
         addNewItemButton.setOnClickListener {
-            currentCategory.addItem("Added by button")
+            showInputBox()
             redraw()
         }
 
@@ -128,11 +133,6 @@ class MainActivity : AppCompatActivity() {
         currentCategory = listItem
     }
 
-    //
-    private fun saveApp(){
-
-    }
-
     //Refreshes the fragment
     public fun redraw(){
         val frag = supportFragmentManager.findFragmentByTag("FragmentMain")
@@ -162,8 +162,49 @@ class MainActivity : AppCompatActivity() {
     }
 
     //Add new items
-    fun addNew(){
+    fun showInputBox(){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle("Title")
 
+        val input = EditText(this)
+        input.setHint("Enter text")
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(input)
+
+        builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
+            in_Text = input.text.toString()
+            currentCategory.addItem(in_Text)
+            Toast.makeText(applicationContext, "Item added", Toast.LENGTH_SHORT).show()
+            redraw()
+        })
+        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialogInterface, i ->
+
+        })
+
+        builder.show()
+    }
+
+    fun showInputBoxCat(){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle("Title")
+
+        val input = EditText(this)
+        input.setHint("Enter text")
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(input)
+
+        builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
+            in_Text = input.text.toString()
+            categories.add(ListCategory(in_Text))
+            clearAdapter()
+            initializeApp()
+            Toast.makeText(applicationContext, "Category Added", Toast.LENGTH_SHORT).show()
+        })
+        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialogInterface, i ->
+
+        })
+
+        builder.show()
     }
 
     //Persistent data
