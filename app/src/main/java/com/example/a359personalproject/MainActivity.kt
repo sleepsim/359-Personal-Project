@@ -10,8 +10,6 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -66,12 +64,21 @@ class MainActivity : AppCompatActivity() {
             redraw()
         }
 
-        //Sync button
-        val removeCatButton = findViewById<FloatingActionButton>(R.id.syncButton)
+        //Remove category button
+        val removeCatButton = findViewById<FloatingActionButton>(R.id.removeCatButton)
         removeCatButton.setOnClickListener {
-            saveCategories()
-            saveItemData()
-            Toast.makeText(applicationContext, "Succesfully saved", Toast.LENGTH_SHORT).show()
+            var indexHolder = 999
+            for (i in categories){
+                if(currentCategory.getCategoryName() == i.getCategoryName()){
+                    indexHolder = categories.indexOf(i)
+                    break
+                }
+            }
+            if(indexHolder != 999 && categories.get(indexHolder).getCategoryName() != "Main") categories.removeAt(indexHolder)
+
+            clearAdapter()
+            initializeApp()
+            updateSpinner()
         }
 
     }
@@ -115,9 +122,11 @@ class MainActivity : AppCompatActivity() {
         return currentCategory
     }
 
+    //Sets current category
     public fun setCurrentCategory(listItem: ListCategory){
         currentCategory = listItem
     }
+
 
     //Refreshes the fragment
     public fun redraw(){
