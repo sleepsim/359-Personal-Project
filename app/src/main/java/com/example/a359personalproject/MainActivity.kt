@@ -19,21 +19,18 @@ class MainActivity : AppCompatActivity() {
     private var categories:ArrayList<ListCategory> = ArrayList<ListCategory>()
     private var categoryNames:ArrayList<String> = ArrayList<String>()
     private var currentCategory: ListCategory = ListCategory("Filler")
-    private var in_Text: String = ""
+    private var inText: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //persistent data
-//        var sharedPreferencesCategories:SharedPreferences = getSharedPreferences("categoriesList", Context.MODE_PRIVATE)
-//        var sharedPreferencesItems:SharedPreferences = getSharedPreferences("itemsList", Context.MODE_PRIVATE)
 
         loadCategoryData()
         loadCategoryItemsData()
-        //Runs if no saved data
+        //First run
         if(savedInstanceState == null) {
-            //Default category
+            //Default category if no saved data
             if(categories.isEmpty()) categories.add(ListCategory("Main"))
 
             currentCategory = categories.get(0)
@@ -102,16 +99,7 @@ class MainActivity : AppCompatActivity() {
         val spinner = findViewById<Spinner>(R.id.spinner)
         val arrayAdapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, categoryNames)
         spinner.adapter = arrayAdapter
-        spinner.onItemSelectedListener = object :AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
 
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-
-            }
-
-        }
     }
     private fun clearAdapter(){
         val spinner = findViewById<Spinner>(R.id.spinner)
@@ -169,8 +157,8 @@ class MainActivity : AppCompatActivity() {
         builder.setView(input)
 
         builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
-            in_Text = input.text.toString()
-            currentCategory.addItem(in_Text)
+            inText = input.text.toString()
+            currentCategory.addItem(inText)
             Toast.makeText(applicationContext, "Item added", Toast.LENGTH_SHORT).show()
             redraw()
         })
@@ -191,8 +179,8 @@ class MainActivity : AppCompatActivity() {
         builder.setView(input)
 
         builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
-            in_Text = input.text.toString()
-            categories.add(ListCategory(in_Text))
+            inText = input.text.toString()
+            categories.add(ListCategory(inText))
             Toast.makeText(applicationContext, "Category Added", Toast.LENGTH_SHORT).show()
             clearAdapter()
             initializeApp()
