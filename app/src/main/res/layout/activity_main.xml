@@ -34,7 +34,7 @@
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addItemButton"
@@ -43,6 +43,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
+        android:contentDescription="Add task"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -51,20 +52,38 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="110dp"
-        app:backgroundTint="#C35D3C"
+        android:layout_marginEnd="140dp"
+        android:contentDescription="Add category"
+        app:backgroundTint="#E8704A"
         app:fabSize="mini"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:rippleColor="#FFFFFF"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="?attr/colorPrimaryDark" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/syncButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="90dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Remove category"
+        app:backgroundTint="#E8704A"
+        app:fabSize="mini"
+        app:srcCompat="@android:drawable/ic_menu_delete"
+        app:tint="@color/black" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_marginTop="18dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="10dp"
         android:elevation="16dp"
-        android:text="category"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Category"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/black" />
 
 

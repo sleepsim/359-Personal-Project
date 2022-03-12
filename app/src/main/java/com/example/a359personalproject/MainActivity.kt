@@ -25,18 +25,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        //persistent data
-//        val sharedPreferences:SharedPreferences = this.getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
+        //persistent data
+//        var sharedPreferencesCategories:SharedPreferences = getSharedPreferences("categoriesList", Context.MODE_PRIVATE)
+//        var sharedPreferencesItems:SharedPreferences = getSharedPreferences("itemsList", Context.MODE_PRIVATE)
 
         loadCategoryData()
         loadCategoryItemsData()
         //Runs if no saved data
         if(savedInstanceState == null) {
             //Default category
-            categories.add(ListCategory("Main"))
+            if(categories.isEmpty()) categories.add(ListCategory("Main"))
 
             currentCategory = categories.get(0)
             //initialize
+            clearAdapter()
             initializeApp()
             //Initial fragment loaded first open
             supportFragmentManager
@@ -58,7 +60,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Changes the data depending on selected spinner item
-        var spinner = findViewById<Spinner>(R.id.spinner)
         updateSpinner()
 
         //Button to add new items on list
@@ -68,8 +69,27 @@ class MainActivity : AppCompatActivity() {
             redraw()
         }
 
+        //Sync button
+        val removeCatButton = findViewById<FloatingActionButton>(R.id.syncButton)
+        removeCatButton.setOnClickListener {
+            saveCategories()
+            saveItemData()
+            Toast.makeText(applicationContext, "Succesfully saved", Toast.LENGTH_SHORT).show()
+        }
 
+    }
 
+    //Save data when pausing or destroying app
+    override fun onPause() {
+        super.onPause()
+        saveItemData()
+        saveCategories()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        saveItemData()
+        saveCategories()
     }
 
     //Resets the categories
@@ -79,8 +99,8 @@ class MainActivity : AppCompatActivity() {
             categoryNames.add(i.getCategoryName())
         }
 
-        var spinner = findViewById<Spinner>(R.id.spinner)
-        var arrayAdapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, categoryNames)
+        val spinner = findViewById<Spinner>(R.id.spinner)
+        val arrayAdapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, categoryNames)
         spinner.adapter = arrayAdapter
         spinner.onItemSelectedListener = object :AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
@@ -94,8 +114,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun clearAdapter(){
-        var spinner = findViewById<Spinner>(R.id.spinner)
-        var arrayAdapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, categoryNames)
+        val spinner = findViewById<Spinner>(R.id.spinner)
+        val arrayAdapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, categoryNames)
         spinner.adapter = arrayAdapter
         arrayAdapter.clear()
         arrayAdapter.notifyDataSetChanged()
@@ -113,7 +133,6 @@ class MainActivity : AppCompatActivity() {
 
     //Refreshes the fragment
     public fun redraw(){
-        val frag = supportFragmentManager.findFragmentByTag("FragmentMain")
         supportFragmentManager
             .beginTransaction()
             .detach(supportFragmentManager.findFragmentByTag("FragmentMain")!!)
@@ -142,7 +161,7 @@ class MainActivity : AppCompatActivity() {
     //Add new items
     fun showInputBox(){
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle("Title")
+        builder.setTitle("Enter task name")
 
         val input = EditText(this)
         input.setHint("Enter text")
@@ -164,7 +183,7 @@ class MainActivity : AppCompatActivity() {
 
     fun showInputBoxCat(){
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle("Title")
+        builder.setTitle("Enter category name")
 
         val input = EditText(this)
         input.setHint("Enter text")
@@ -186,26 +205,33 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
-    //Persistent data
+    //Persistent data ---------------------------------------------------------------------------------------------------------------------------------------------
+
+    //Save individual list items
     public fun saveItemData(){
 
         val sharedPreferences:SharedPreferences = this.getSharedPreferences("itemsList", Context.MODE_PRIVATE)
         val editor:SharedPreferences.Editor = sharedPreferences.edit()
         for(i in categories){
-            var set = HashSet<String>()
-            set = i.getItems().toHashSet()
+            var set = i.getItems().toHashSet()
             editor.putStringSet(i.getCategoryName(), set)
         }
+        editor.apply()
     }
 
+    //Save category names
     public fun saveCategories(){
         val sharedPreferences:SharedPreferences = this.getSharedPreferences("categoriesList", Context.MODE_PRIVATE)
         val editor:SharedPreferences.Editor = sharedPreferences.edit()
-        var set = HashSet<String>()
-        set = categoryNames.toHashSet()
+        var set = categoryNames.toHashSet()
         editor.putStringSet("Categories", set)
+        for (j in set) {
+            Log.i("Save test", j.toString())
+        }
+        editor.apply()
     }
 
+    //Load category names
     private fun loadCategoryData(){
         //Load category names and add them into an array
         val sharedPreferences:SharedPreferences = this.getSharedPreferences("categoriesList", Context.MODE_PRIVATE)
@@ -214,15 +240,19 @@ class MainActivity : AppCompatActivity() {
             categoryNames = ArrayList(savedString)
             for (i in categoryNames) {
                 categories.add(ListCategory(i))
+                Log.i("datashared", i)
             }
         }
     }
 
+    //Load individual item data
     private fun loadCategoryItemsData(){
         //Load the items of each category into an array and insert into correct category
         val sharedPreferences:SharedPreferences = this.getSharedPreferences("itemsList", Context.MODE_PRIVATE)
+        Log.i("datashared", "Categories loaded")
         for(i in categoryNames){
             val savedItems = sharedPreferences.getStringSet(i, null)
+            Log.i("datashared", "Categories loaded inside")
             if(savedItems != null){
                 for(j in categories) if(j.getCategoryName() == i) {
                     j.replaceItems(ArrayList(savedItems))
@@ -237,11 +267,9 @@ class MainActivity : AppCompatActivity() {
         spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                Log.i("workwork", "i work work")
                 val currentCategoryText = spinner.selectedItem.toString()
                 for(i in categories) {
                     if (i.getCategoryName() == currentCategoryText) {
-                        Log.i("workwork", "pls work"+ i.getCategoryName())
                         setCurrentCategory(i)
                         Toast.makeText(applicationContext, "Category changed", Toast.LENGTH_SHORT).show()
                     }
@@ -253,5 +281,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+        saveCategories()
     }
 }
