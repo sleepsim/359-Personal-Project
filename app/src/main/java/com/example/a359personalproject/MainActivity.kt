@@ -31,7 +31,12 @@ class MainActivity : AppCompatActivity() {
             //Default category if no saved data
             if(categories.isEmpty()) categories.add(ListCategory("Main"))
 
-            currentCategory = categories.get(0)
+            //Use "Main" as default on startup
+            for(i in categories){
+                if(i.getCategoryName() == "Main"){
+                    currentCategory = i
+                }
+            }
             //initialize
             clearAdapter()
             initializeApp()
