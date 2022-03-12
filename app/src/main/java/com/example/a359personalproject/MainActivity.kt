@@ -30,15 +30,8 @@ class MainActivity : AppCompatActivity() {
 
         //Runs if no saved data
         if(savedInstanceState == null) {
-            //2 Main important categories
+            //Default category
             categories.add(ListCategory("Main"))
-            categories.add(ListCategory("Trash"))
-            categories.get(0).addItem("LOL ADDED BY MAIN ACTIVITY")
-            categories.get(0).addItem("LOL ADDED BY  2")
-            categories.get(0).addItem("LOL ADDED BY  3")
-            categories.get(0).addItem("LOL ADDED BY  4")
-            categories.get(0).addItem("LOL ADDED BY  5")
-
 
             currentCategory = categories.get(0)
             //initialize
@@ -56,14 +49,6 @@ class MainActivity : AppCompatActivity() {
         val addNewCatButton = findViewById<FloatingActionButton>(R.id.addCategoryButton)
         addNewCatButton.setOnClickListener {
             showInputBoxCat()
-//            categories.add(ListCategory("newly added"))
-//            clearAdapter()
-//            initializeApp()
-//            for (f in categoryNames){
-//                Log.i("CATNAMES", f.toString())
-//            }
-//            Log.i("endOfArr", "END")
-//            Log.i("CATNAME2", "In text is" + in_Text)
         }
 
         //Changes the data depending on selected spinner item
