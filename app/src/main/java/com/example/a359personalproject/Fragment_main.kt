@@ -27,13 +27,6 @@ class Fragment_main : Fragment() {
         val currCat: ListCategory = (activity as MainActivity).getCat()
         currCat.getItems()
 
-        //Tester code replace later
-        val checkBox = fragmentView.findViewById<CheckBox>(R.id.checkBoxTester)
-
-        checkBox.setOnClickListener {
-            checkBox.text = "LOOOOL"
-        }
-
         //Grab items for list
         for(i in currCat.getItems().indices) {
             if (currCat.getItems().size > 0 && currCat.getItems().get(0) != null) {
@@ -48,10 +41,6 @@ class Fragment_main : Fragment() {
                 }
             }
         }
-
-
-        if(currCat.getCategoryName() == "Trash") checkBox.text = "TRASH TRASH TRASH"
-        Log.i("FragmentRefresh", currCat.getCategoryName())
 
         return fragmentView
     }
