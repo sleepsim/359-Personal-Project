@@ -43,7 +43,9 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
+        android:backgroundTint="#E8704A"
         android:contentDescription="Add task"
+        app:tint="@color/white"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -58,7 +60,7 @@
         app:fabSize="mini"
         app:rippleColor="#FFFFFF"
         app:srcCompat="@android:drawable/ic_input_add"
-        app:tint="?attr/colorPrimaryDark" />
+        app:tint="@color/white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/removeCatButton"
@@ -73,7 +75,7 @@
         app:backgroundTint="#E8704A"
         app:fabSize="mini"
         app:srcCompat="@android:drawable/ic_menu_delete"
-        app:tint="@color/black" />
+        app:tint="@color/white" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -84,7 +86,7 @@
         android:elevation="16dp"
         android:text="Category"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/black" />
+        android:textColor="@color/white" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
