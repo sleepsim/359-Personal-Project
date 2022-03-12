@@ -2,6 +2,7 @@ package com.example.a359personalproject
 
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.view.marginTop
 
 
 class Fragment_main : Fragment() {
@@ -33,6 +35,7 @@ class Fragment_main : Fragment() {
                 val cb: CheckBox = CheckBox(activity)
                 val ll = fragmentView.findViewById<LinearLayout>(R.id.linearLayout)
                 cb.text = currCat.getItems().get(i)
+                cb.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20F)
                 ll.addView(cb)
                 Log.i("Index size", currCat.getItems().size.toString())
                 cb.setOnClickListener {
