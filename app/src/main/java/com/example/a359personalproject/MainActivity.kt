@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity() {
 //        //persistent data
 //        val sharedPreferences:SharedPreferences = this.getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
 
+        loadCategoryData()
+        loadCategoryItemsData()
         //Runs if no saved data
         if(savedInstanceState == null) {
             //Default category
@@ -45,29 +47,19 @@ class MainActivity : AppCompatActivity() {
                 ).commit()
         }
 
+
         //Button to add new categories
         val addNewCatButton = findViewById<FloatingActionButton>(R.id.addCategoryButton)
         addNewCatButton.setOnClickListener {
             showInputBoxCat()
+            clearAdapter()
+            initializeApp()
+            updateSpinner()
         }
 
         //Changes the data depending on selected spinner item
-        val spinner = findViewById<Spinner>(R.id.spinner)
-        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-
-                val currentCategoryText = spinner.selectedItem.toString()
-                for(i in categories) {
-                    if (i.getCategoryName() == currentCategoryText) {
-                        setCurrentCategory(i)
-                    }
-                }
-                redraw()
-            }
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-
-            }
-        }
+        var spinner = findViewById<Spinner>(R.id.spinner)
+        updateSpinner()
 
         //Button to add new items on list
         val addNewItemButton = findViewById<FloatingActionButton>(R.id.addItemButton)
@@ -87,8 +79,8 @@ class MainActivity : AppCompatActivity() {
             categoryNames.add(i.getCategoryName())
         }
 
-        val spinner = findViewById<Spinner>(R.id.spinner)
-        val arrayAdapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, categoryNames)
+        var spinner = findViewById<Spinner>(R.id.spinner)
+        var arrayAdapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, categoryNames)
         spinner.adapter = arrayAdapter
         spinner.onItemSelectedListener = object :AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
@@ -102,11 +94,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun clearAdapter(){
-        val spinner = findViewById<Spinner>(R.id.spinner)
-        val arrayAdapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, categoryNames)
+        var spinner = findViewById<Spinner>(R.id.spinner)
+        var arrayAdapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, categoryNames)
         spinner.adapter = arrayAdapter
         arrayAdapter.clear()
         arrayAdapter.notifyDataSetChanged()
+        Log.i("Adapter ran", "i do work")
     }
 
     //Gets the current category to pass on to fragment
@@ -181,9 +174,10 @@ class MainActivity : AppCompatActivity() {
         builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
             in_Text = input.text.toString()
             categories.add(ListCategory(in_Text))
+            Toast.makeText(applicationContext, "Category Added", Toast.LENGTH_SHORT).show()
             clearAdapter()
             initializeApp()
-            Toast.makeText(applicationContext, "Category Added", Toast.LENGTH_SHORT).show()
+            updateSpinner()
         })
         builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialogInterface, i ->
 
@@ -193,7 +187,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //Persistent data
-    private fun saveItemData(){
+    public fun saveItemData(){
 
         val sharedPreferences:SharedPreferences = this.getSharedPreferences("itemsList", Context.MODE_PRIVATE)
         val editor:SharedPreferences.Editor = sharedPreferences.edit()
@@ -204,7 +198,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveCategories(){
+    public fun saveCategories(){
         val sharedPreferences:SharedPreferences = this.getSharedPreferences("categoriesList", Context.MODE_PRIVATE)
         val editor:SharedPreferences.Editor = sharedPreferences.edit()
         var set = HashSet<String>()
@@ -216,9 +210,11 @@ class MainActivity : AppCompatActivity() {
         //Load category names and add them into an array
         val sharedPreferences:SharedPreferences = this.getSharedPreferences("categoriesList", Context.MODE_PRIVATE)
         val savedString = sharedPreferences.getStringSet("Categories", null)
-        categoryNames = ArrayList(savedString)
-        for(i in categoryNames){
-            categories.add(ListCategory(i))
+        if(savedString != null) {
+            categoryNames = ArrayList(savedString)
+            for (i in categoryNames) {
+                categories.add(ListCategory(i))
+            }
         }
     }
 
@@ -227,10 +223,35 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences:SharedPreferences = this.getSharedPreferences("itemsList", Context.MODE_PRIVATE)
         for(i in categoryNames){
             val savedItems = sharedPreferences.getStringSet(i, null)
-            for(j in categories) if(j.getCategoryName() == i) {
-                j.replaceItems(ArrayList(savedItems))
-                break
+            if(savedItems != null){
+                for(j in categories) if(j.getCategoryName() == i) {
+                    j.replaceItems(ArrayList(savedItems))
+                    break
+                }
             }
+        }
+    }
+
+    private fun updateSpinner(){
+        var spinner = findViewById<Spinner>(R.id.spinner)
+        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                Log.i("workwork", "i work work")
+                val currentCategoryText = spinner.selectedItem.toString()
+                for(i in categories) {
+                    if (i.getCategoryName() == currentCategoryText) {
+                        Log.i("workwork", "pls work"+ i.getCategoryName())
+                        setCurrentCategory(i)
+                        Toast.makeText(applicationContext, "Category changed", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                redraw()
+            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
         }
     }
 }
